@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Send
+namespace PubSub
 {
     public class Program
     {
@@ -18,7 +18,11 @@ namespace Send
             using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
             for (int i = 1; i <= NumberOfMessages; i++)
             {
-                if (!messageBatch.TryAddMessage(new ServiceBusMessage($"Message {i}")))
+                ServiceBusMessage createdMessage = new ServiceBusMessage("body");
+                createdMessage.ApplicationProperties.Add("Property1", "");
+                createdMessage.ApplicationProperties.Add("Property2", "");
+
+                if (!messageBatch.TryAddMessage(createdMessage))
                 {
                     throw new Exception($"The message {i} is too large to fit in the batch.");
                 }
